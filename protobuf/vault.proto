@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+option java_package = "app.sinope.vault.api.model";
+option go_package = "github.com/elizabeth-dev/Vault-API/genproto";
+
+import "google/protobuf/empty.proto";
+
+service VaultService {
+	rpc GetCatalog (google.protobuf.Empty) returns (stream CatalogResult);
+	rpc GetItem (SelectItem) returns (ItemResponse);
+	rpc DeleteItem (SelectItem) returns (google.protobuf.Empty);
+	rpc AddItem (SetItem) returns (ItemResponse);
+	rpc UpdateItem (SetItem) returns (ItemResponse);
+}
+
+message CatalogResult {
+	string item_id = 1;
+	string item_title = 2;
+	string item_login_id = 3;
+}
+
+message SelectItem {
+	string item_id = 1;
+}
+
+message ItemResponse {
+	string item_id = 1;
+	string item_title = 2;
+	string item_login_id = 3;
+	string item_password = 4;
+	repeated string item_url = 5;
+}
+
+message SetItem {
+	string item_id = 1;
+	string item_title = 2;
+	string item_login_id = 3;
+	string item_password = 4;
+	repeated string item_url = 5;
+}

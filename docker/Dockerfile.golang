@@ -1,0 +1,13 @@
+# WIP
+FROM
+
+COPY protobuf protobuf
+
+RUN mkdir genproto && \
+    protoc \
+	--go_out=paths=source_relative:./genproto \
+	--go-grpc_out=paths=source_relative:./genproto \
+	-I protobuf \
+	protobuf/*.proto
+
+RUN go mod tidy
