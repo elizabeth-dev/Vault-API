@@ -19,7 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type VaultServiceClient interface {
-	GetCatalog(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (VaultService_GetCatalogClient, error)
+	GetAllItem(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (VaultService_GetAllItemClient, error)
 	GetItem(ctx context.Context, in *SelectItem, opts ...grpc.CallOption) (*ItemResponse, error)
 	DeleteItem(ctx context.Context, in *SelectItem, opts ...grpc.CallOption) (*empty.Empty, error)
 	AddItem(ctx context.Context, in *SetItem, opts ...grpc.CallOption) (*ItemResponse, error)
@@ -34,12 +34,12 @@ func NewVaultServiceClient(cc grpc.ClientConnInterface) VaultServiceClient {
 	return &vaultServiceClient{cc}
 }
 
-func (c *vaultServiceClient) GetCatalog(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (VaultService_GetCatalogClient, error) {
-	stream, err := c.cc.NewStream(ctx, &VaultService_ServiceDesc.Streams[0], "/VaultService/GetCatalog", opts...)
+func (c *vaultServiceClient) GetAllItem(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (VaultService_GetAllItemClient, error) {
+	stream, err := c.cc.NewStream(ctx, &VaultService_ServiceDesc.Streams[0], "/VaultService/GetAllItem", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &vaultServiceGetCatalogClient{stream}
+	x := &vaultServiceGetAllItemClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -49,17 +49,17 @@ func (c *vaultServiceClient) GetCatalog(ctx context.Context, in *empty.Empty, op
 	return x, nil
 }
 
-type VaultService_GetCatalogClient interface {
-	Recv() (*CatalogResult, error)
+type VaultService_GetAllItemClient interface {
+	Recv() (*ItemResponse, error)
 	grpc.ClientStream
 }
 
-type vaultServiceGetCatalogClient struct {
+type vaultServiceGetAllItemClient struct {
 	grpc.ClientStream
 }
 
-func (x *vaultServiceGetCatalogClient) Recv() (*CatalogResult, error) {
-	m := new(CatalogResult)
+func (x *vaultServiceGetAllItemClient) Recv() (*ItemResponse, error) {
+	m := new(ItemResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -106,7 +106,7 @@ func (c *vaultServiceClient) UpdateItem(ctx context.Context, in *SetItem, opts .
 // All implementations must embed UnimplementedVaultServiceServer
 // for forward compatibility
 type VaultServiceServer interface {
-	GetCatalog(*empty.Empty, VaultService_GetCatalogServer) error
+	GetAllItem(*empty.Empty, VaultService_GetAllItemServer) error
 	GetItem(context.Context, *SelectItem) (*ItemResponse, error)
 	DeleteItem(context.Context, *SelectItem) (*empty.Empty, error)
 	AddItem(context.Context, *SetItem) (*ItemResponse, error)
@@ -118,8 +118,8 @@ type VaultServiceServer interface {
 type UnimplementedVaultServiceServer struct {
 }
 
-func (UnimplementedVaultServiceServer) GetCatalog(*empty.Empty, VaultService_GetCatalogServer) error {
-	return status.Errorf(codes.Unimplemented, "method GetCatalog not implemented")
+func (UnimplementedVaultServiceServer) GetAllItem(*empty.Empty, VaultService_GetAllItemServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllItem not implemented")
 }
 func (UnimplementedVaultServiceServer) GetItem(context.Context, *SelectItem) (*ItemResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetItem not implemented")
@@ -146,24 +146,24 @@ func RegisterVaultServiceServer(s grpc.ServiceRegistrar, srv VaultServiceServer)
 	s.RegisterService(&VaultService_ServiceDesc, srv)
 }
 
-func _VaultService_GetCatalog_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _VaultService_GetAllItem_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(empty.Empty)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(VaultServiceServer).GetCatalog(m, &vaultServiceGetCatalogServer{stream})
+	return srv.(VaultServiceServer).GetAllItem(m, &vaultServiceGetAllItemServer{stream})
 }
 
-type VaultService_GetCatalogServer interface {
-	Send(*CatalogResult) error
+type VaultService_GetAllItemServer interface {
+	Send(*ItemResponse) error
 	grpc.ServerStream
 }
 
-type vaultServiceGetCatalogServer struct {
+type vaultServiceGetAllItemServer struct {
 	grpc.ServerStream
 }
 
-func (x *vaultServiceGetCatalogServer) Send(m *CatalogResult) error {
+func (x *vaultServiceGetAllItemServer) Send(m *ItemResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -265,8 +265,8 @@ var VaultService_ServiceDesc = grpc.ServiceDesc{
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "GetCatalog",
-			Handler:       _VaultService_GetCatalog_Handler,
+			StreamName:    "GetAllItem",
+			Handler:       _VaultService_GetAllItem_Handler,
 			ServerStreams: true,
 		},
 	},

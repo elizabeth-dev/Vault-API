@@ -6,7 +6,7 @@ option go_package = "github.com/elizabeth-dev/Vault-API/genproto";
 import "google/protobuf/empty.proto";
 
 service VaultService {
-	rpc GetCatalog (google.protobuf.Empty) returns (stream CatalogResult);
+	rpc GetAllItem (google.protobuf.Empty) returns (stream ItemResponse);
 	rpc GetItem (SelectItem) returns (ItemResponse);
 	rpc DeleteItem (SelectItem) returns (google.protobuf.Empty);
 	rpc AddItem (SetItem) returns (ItemResponse);
